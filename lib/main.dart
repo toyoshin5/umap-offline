@@ -1,22 +1,20 @@
 import 'dart:io';
 
-import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gohan_map/bottom_navigation.dart';
 
-import 'package:gohan_map/firebase_options.dart';
 import 'package:gohan_map/tab_navigator.dart';
-import 'package:gohan_map/utils/auth_state.dart';
 import 'package:gohan_map/utils/logger.dart';
 import 'package:gohan_map/utils/safearea_utils.dart';
 import 'package:gohan_map/view/all_post_page.dart';
 import 'package:gohan_map/view/character_page.dart';
 import 'package:gohan_map/view/login_page.dart';
 import 'package:gohan_map/view/map_page.dart';
-import 'package:gohan_map/view/swipeui_pre_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// アプリが起動したときに呼ばれる
 void main() async {
@@ -28,9 +26,6 @@ void main() async {
 
   // スプラッシュ画面をロードが終わるまで表示する
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
   await dotenv.load(fileName: '.env');
   runApp(const ProviderScope(child: MyApp()));
 }
@@ -45,28 +40,53 @@ class MyApp extends ConsumerWidget {
     //セーフエリア外の高さを保存しておく
     SafeAreaUtil.unSafeAreaBottomHeight = MediaQuery.of(context).padding.bottom;
     SafeAreaUtil.unSafeAreaTopHeight = MediaQuery.of(context).padding.top;
-    //ログイン済みか
-    final isSignedIn = ref.watch(isSignedInProvider);
-    return MaterialApp(
-      title: 'Umap',
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: (isSignedIn) ? const MainPage() : const LoginPage(),
-      ),
-      theme: ThemeData(
-        fontFamily: (Platform.isAndroid) ? "SanFrancisco" : null,
-        fontFamilyFallback: (Platform.isAndroid) ? ["HiraginoSans"] : null,
-      ),
+    return FutureBuilder<bool>(
+      future: getIsFirstLaunch(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          // ローディング中のウィジェットを表示
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          // エラーが発生した場合のウィジェットを表示
+          return const Center(child: Text('エラーが発生しました'));
+        } else {
+          final bool isFirstLaunch = snapshot.data ?? true;
+          return MaterialApp(
+            title: 'Umap',
+            debugShowCheckedModeBanner: false,
+            home: Scaffold(
+              resizeToAvoidBottomInset: false,
+              body: (isFirstLaunch) ? const LoginPage() : const MainPage(),
+            ),
+            theme: ThemeData(
+              fontFamily: (Platform.isAndroid) ? "SanFrancisco" : null,
+              fontFamilyFallback: (Platform.isAndroid) ? ["HiraginoSans"] : null,
+              useMaterial3: false,
+            ),
+          );
+        }
+      },
     );
+  }
+
+  //最初の起動かをSharedPreferencesから取得する
+  Future<bool> getIsFirstLaunch() async {
+    //デバッグ用
+    if (kDebugMode) {
+      return true;
+    }
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final bool isFirstLaunch = prefs.getBool('isFirstLaunch') ?? true;
+    if (isFirstLaunch) {
+      prefs.setBool('isFirstLaunch', false);
+    }
+    return isFirstLaunch;
   }
 }
 
 enum TabItem {
   map,
-  swipe,
   character,
-  setting,
 }
 
 //タブバー(BottomNavigationBar)を含んだ全体の画面
@@ -80,17 +100,13 @@ class _MainPageState extends State<MainPage> {
   TabItem _currentTab = TabItem.map;
   final Map<TabItem, GlobalKey<NavigatorState>> _navigatorKeys = {
     TabItem.map: GlobalKey<NavigatorState>(),
-    TabItem.swipe: GlobalKey<NavigatorState>(),
     TabItem.character: GlobalKey<NavigatorState>(),
-    TabItem.setting: GlobalKey<NavigatorState>(),
   };
 
   //globalKeyは、ウィジェットの状態を保存するためのもの
   final Map<TabItem, GlobalKey<State>> _globalKeys = {
     TabItem.map: GlobalKey<State>(),
-    TabItem.swipe: GlobalKey<State>(),
     TabItem.character: GlobalKey<State>(),
-    TabItem.setting: GlobalKey<State>(),
   };
 
   final allpostKey = GlobalKey<AllPostPageState>();
@@ -105,16 +121,8 @@ class _MainPageState extends State<MainPage> {
             '/map',
           ),
           _buildTabItem(
-            TabItem.swipe,
-            '/allpost',
-          ),
-          _buildTabItem(
             TabItem.character,
             '/character',
-          ),
-          _buildTabItem(
-            TabItem.setting,
-            '/setting',
           ),
         ],
       ),
@@ -144,16 +152,7 @@ class _MainPageState extends State<MainPage> {
   //タブが選択されたときに呼ばれる。tabItemは選択されたタブ
   void onSelect(TabItem tabItem) {
     //選択されたタブをリロードする
-    if (tabItem == TabItem.swipe) {
-      SwipeUIPrePageState? allpostPageState =
-          _globalKeys[tabItem]!.currentState as SwipeUIPrePageState?;
-      allpostPageState?.reload();
-      if (_currentTab == tabItem) {
-        _navigatorKeys[tabItem]
-            ?.currentState
-            ?.popUntil((route) => route.isFirst);
-      }
-    } else if (tabItem == TabItem.map) {
+    if (tabItem == TabItem.map) {
       MapPageState? mapPageState =
           _globalKeys[tabItem]!.currentState as MapPageState?;
       mapPageState?.reload();

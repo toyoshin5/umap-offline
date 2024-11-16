@@ -141,7 +141,8 @@ class MapPageState extends State<MapPage> with TickerProviderStateMixin {
                     setState(() {
                       tapFlgs[id] = true;
                     });
-                    showModalBottomSheet(
+                    if (mounted) {
+                      showModalBottomSheet(
                       barrierColor: Colors.black.withOpacity(0),
                       context: context,
                       isDismissible: true,
@@ -163,6 +164,7 @@ class MapPageState extends State<MapPage> with TickerProviderStateMixin {
                         _moveToPin(latLng, (deviceHeight - 150) * 0.15);
                       }
                     });
+                    }        
                   }
 
                   //検索画面で新規店舗を選択した場合、新規作成画面を表示する。

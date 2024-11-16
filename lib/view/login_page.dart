@@ -4,7 +4,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:gohan_map/colors/app_colors.dart';
 import 'package:gohan_map/main.dart';
-import 'package:gohan_map/utils/auth_service.dart';
 import 'package:sign_in_button/sign_in_button.dart';
 
 class LoginPage extends StatelessWidget {
@@ -88,7 +87,7 @@ class LoginPage extends StatelessWidget {
                         ),
                       ),
                       const Text(
-                        "自分だけのご飯マップを作成しよう！",
+                        "自分だけのご飯マップを作成しましょう！",
                       ),
                       const Divider(
                         color: AppColors.greyColor,
@@ -96,55 +95,34 @@ class LoginPage extends StatelessWidget {
                         height: 36,
                       ),
                       const Text(
-                        "アプリを使用するにはログインする必要があります",
+                        "アプリはログインなしで利用できます。",
                       ),
                       const SizedBox(height: 16),
-                      //iOSのみ
-                      if (Platform.isIOS)
-                        SignInButton(
-                          Buttons.appleDark,
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const MainPage(),
+                            ),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primaryColor, // ボタンの背景色
+                          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          onPressed: () {
-                            final service = AuthService();
-                            service.signInWithApple().then((value) => {
-                                  if (value != null)
-                                    {
-                                      Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              const MainPage(),
-                                        ),
-                                      ),
-                                    },
-                                });
-                          },
                         ),
-                      SignInButton(
-                        Buttons.google,
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                        child: const Text(
+                          "アプリを始める",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.whiteColor,
+                          ),
                         ),
-                        onPressed: () {
-                          final service = AuthService();
-                          service.signInWithGoogle().then((value) => {
-                                if (value != null)
-                                  {
-                                    Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => const MainPage(),
-                                      ),
-                                    ),
-                                  },
-                              });
-                        },
                       ),
-                      
                     ],
                   ),
                 ),

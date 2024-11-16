@@ -5,15 +5,11 @@ import 'package:gohan_map/main.dart';
 
 const tabTitle = <TabItem, String>{
   TabItem.map: 'マップ',
-  TabItem.swipe: 'スワイプ',
   TabItem.character: 'キャラクター',
-  TabItem.setting: '設定',
 };
 const tabIcon = <TabItem, IconData>{
   TabItem.map: AppIcons.map_marked_alt,
-  TabItem.swipe: Icons.thumbs_up_down,
   TabItem.character: AppIcons.paw,
-  TabItem.setting: Icons.settings,
 };
 
 class BottomNavigation extends StatelessWidget {
@@ -44,15 +40,7 @@ class BottomNavigation extends StatelessWidget {
           ),
           bottomItem(
             context,
-            tabItem: TabItem.swipe,
-          ),
-          bottomItem(
-            context,
             tabItem: TabItem.character,
-          ),
-          bottomItem(
-            context,
-            tabItem: TabItem.setting,
           ),
         ],
         type: BottomNavigationBarType.fixed,

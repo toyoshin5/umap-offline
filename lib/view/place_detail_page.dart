@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gohan_map/collections/shop.dart';
@@ -9,8 +8,6 @@ import 'package:gohan_map/colors/app_colors.dart';
 import 'package:gohan_map/component/app_modal.dart';
 import 'package:gohan_map/component/post_card_widget.dart';
 import 'package:gohan_map/icon/app_icon_icons.dart';
-import 'package:gohan_map/utils/apis.dart';
-import 'package:gohan_map/utils/auth_state.dart';
 import 'package:gohan_map/utils/common.dart';
 import 'package:gohan_map/view/place_post_page.dart';
 import 'package:gohan_map/view/place_update_page.dart';
@@ -289,34 +286,6 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
                           });
                         },
                         onDeleteTapped: () async {
-                          String res = "";
-                          if (timeline.images.isNotEmpty) {
-                            res = await APIService.requestDeleteAPI(timeline.id,
-                                await ref.watch(userProvider)?.getIdToken());
-                          }
-                          if (res.isNotEmpty &&
-                              res != "Post not found" &&
-                              context.mounted) {
-                            showCupertinoDialog(
-                              context: context,
-                              builder: (context) {
-                                return CupertinoAlertDialog(
-                                  title: const Text("投稿の削除に失敗しました"),
-                                  content: Text(res),
-                                  actions: [
-                                    CupertinoDialogAction(
-                                      child: const Text("OK"),
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                            return;
-                          }
-                          debugPrint("削除API実行");
                           IsarUtils.deleteTimeline(timeline.id);
                           setState(() {
                             shopTimeline!.remove(timeline);

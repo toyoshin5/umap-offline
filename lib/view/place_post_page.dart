@@ -9,7 +9,6 @@ import 'package:gohan_map/collections/timeline.dart';
 import 'package:gohan_map/component/app_exp_dialog.dart';
 import 'package:gohan_map/component/post_food_widget.dart';
 import 'package:gohan_map/utils/apis.dart';
-import 'package:gohan_map/utils/auth_state.dart';
 import 'package:gohan_map/utils/common.dart';
 import 'package:gohan_map/utils/isar_utils.dart';
 import 'package:gohan_map/view/place_detail_page.dart';
@@ -221,34 +220,6 @@ class _PlacePostPageState extends ConsumerState<PlacePostPage> {
       );
       return;
     }
-    if (!(isPublic && images.isNotEmpty) && widget.timeline != null) {
-      //画像がないか非公開でかつ編集の時
-      //画像削除APIを叩く。新規投稿の時は走らない
-      final String result = await APIService.requestDeleteAPI(
-          widget.timeline!.id, await ref.watch(userProvider)?.getIdToken());
-      if (result != "" && result != "Post not found" && context.mounted) {
-        showCupertinoDialog(
-          context: context,
-          builder: (context) {
-            return CupertinoAlertDialog(
-              title: const Text('投稿の削除に失敗しました'),
-              content: Text(result),
-              actions: [
-                CupertinoDialogAction(
-                  child: const Text('閉じる'),
-                  onPressed: () {
-                    Navigator.pop(context);
-                    return;
-                  },
-                ),
-              ],
-            );
-          },
-        );
-        return;
-      }
-    }
-    isAPIRequesting = false;
     //wantToGoフラグがTrueの場合はFalseに変更
     int timelineId = widget.timeline?.id ?? -1;
     if (widget.shop.wantToGoFlg) {
@@ -282,45 +253,7 @@ class _PlacePostPageState extends ConsumerState<PlacePostPage> {
           getAndShowExpDialog(context: context, title: "投稿ボーナス", exp: 100);
         }
       }
-     
     }
-
-    if (isPublic && images.isNotEmpty && timelineId != -1) {
-      //画像投稿APIを叩く
-      PostAPIRequest req = PostAPIRequest(
-        timelineId: timelineId,
-        googleMapShopId: widget.shop.googlePlaceId,
-        longitude: widget.shop.shopLongitude,
-        latitude: widget.shop.shopLatitude,
-        star: star,
-        name: widget.shop.shopName,
-        address: widget.shop.shopAddress,
-        imageList: images.map((e) => e.readAsBytesSync()).toList(),
-      );
-      final String result = await APIService.requestPostAPI(
-          req, await ref.watch(userProvider)?.getIdToken());
-      if (result != "" && context.mounted) {
-        showCupertinoDialog(
-          context: context,
-          builder: (context) {
-            return CupertinoAlertDialog(
-              title: const Text('投稿に失敗しました'),
-              content: Text(result),
-              actions: [
-                CupertinoDialogAction(
-                  child: const Text('閉じる'),
-                  onPressed: () {
-                    Navigator.pop(context);
-                    return;
-                  },
-                ),
-              ],
-            );
-          },
-        );
-        return;
-      }
-    } 
   }
 
   //DBに投稿を追加
