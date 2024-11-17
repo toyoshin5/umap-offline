@@ -44,7 +44,8 @@ class BottomNavigation extends StatelessWidget {
           ),
         ],
         type: BottomNavigationBarType.fixed,
-        selectedFontSize: 12,
+        selectedFontSize: 0,
+        unselectedFontSize: 0,
         onTap: (index) {
           onSelect(TabItem.values[index]);
         },

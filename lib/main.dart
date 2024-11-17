@@ -27,45 +27,59 @@ void main() async {
   // スプラッシュ画面をロードが終わるまで表示する
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: '.env');
-  runApp(const ProviderScope(child: MyApp()));
+  runApp(MyApp());
 }
-
 ///アプリケーションの最上位のウィジェット
 ///ウィジェットとは、画面に表示される要素のこと。
-class MyApp extends ConsumerWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  bool? _isFirstLaunch;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkFirstLaunch();
+  }
+
+  Future<void> _checkFirstLaunch() async {
+    bool isFirst = await getIsFirstLaunch();
+    setState(() {
+      _isFirstLaunch = isFirst;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     //セーフエリア外の高さを保存しておく
     SafeAreaUtil.unSafeAreaBottomHeight = MediaQuery.of(context).padding.bottom;
     SafeAreaUtil.unSafeAreaTopHeight = MediaQuery.of(context).padding.top;
-    return FutureBuilder<bool>(
-      future: getIsFirstLaunch(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          // ローディング中のウィジェットを表示
-          return const Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          // エラーが発生した場合のウィジェットを表示
-          return const Center(child: Text('エラーが発生しました'));
-        } else {
-          final bool isFirstLaunch = snapshot.data ?? true;
-          return MaterialApp(
-            title: 'Umap',
-            debugShowCheckedModeBanner: false,
-            home: Scaffold(
-              resizeToAvoidBottomInset: false,
-              body: (isFirstLaunch) ? const LoginPage() : const MainPage(),
-            ),
-            theme: ThemeData(
-              fontFamily: (Platform.isAndroid) ? "SanFrancisco" : null,
-              fontFamilyFallback: (Platform.isAndroid) ? ["HiraginoSans"] : null,
-              useMaterial3: false,
-            ),
-          );
-        }
-      },
+
+    if (_isFirstLaunch == null) {
+      return const MaterialApp(
+        home: Scaffold(
+          body: Center(child: CircularProgressIndicator()),
+        ),
+      );
+    }
+
+    return MaterialApp(
+      title: 'Umap',
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: (_isFirstLaunch!) ? const LoginPage() : const MainPage(),
+      ),
+      theme: ThemeData(
+        fontFamily: (Platform.isAndroid) ? "SanFrancisco" : null,
+        fontFamilyFallback: (Platform.isAndroid) ? ["HiraginoSans"] : null,
+        useMaterial3: false,
+      ),
     );
   }
 
@@ -111,7 +125,7 @@ class _MainPageState extends State<MainPage> {
 
   final allpostKey = GlobalKey<AllPostPageState>();
 
-  @override
+    @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(

@@ -47,10 +47,10 @@ Future<List<PlaceApiRestaurantResult>> searchRestaurantsByGoogleMapApi(
 
   try {
     var response = await client.get(Uri.parse(apiUrl));
-    if (response.statusCode != 200) throw "通信に失敗しました";
+    if (response.statusCode != 200) throw "通信に失敗しました\n$response";
 
     final responseData = json.decode(response.body);
-    if (responseData["status"] != "OK") throw "APIリクエストに失敗しました";
+    if (responseData["status"] != "OK") throw "APIリクエストに失敗しました\n$responseData";
 
     for (var item in responseData["results"]) {
       result.add(PlaceApiRestaurantResult.fromJson(item));
