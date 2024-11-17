@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/Material.dart';
 import 'package:gohan_map/collections/timeline.dart';
-import 'package:gohan_map/colors/app_colors.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:path/path.dart' as p;
@@ -38,7 +37,7 @@ class AppPhotosView extends StatelessWidget {
         imgNum = [0, 1, 2, 3];
         break;
     }
-    return Container(
+    return SizedBox(
       width: double.infinity,
       child: AspectRatio(
         aspectRatio: 16 / 9,

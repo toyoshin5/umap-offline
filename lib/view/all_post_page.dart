@@ -186,8 +186,7 @@ class AllPostPageState extends State<AllPostPage> {
                       return Container();
                     } else {
                       //画像がある投稿のみを表示
-                      if (shopTimelineWithImg == null ||
-                          shopTimelineWithImg.isEmpty) {
+                      if (shopTimelineWithImg.isEmpty) {
                         return Container(
                           padding: const EdgeInsets.all(16),
                           child: const Text("投稿がありません"),
@@ -206,14 +205,15 @@ class AllPostPageState extends State<AllPostPage> {
                         itemBuilder: (BuildContext context, int index) {
                           return InkWell(
                             onTap: () async {
-                              final s = shopTimelineWithImg![index].shopId;
+                              final s = shopTimelineWithImg[index].shopId;
                               final shop = await IsarUtils.getShopById(s);
                               if (mounted && shop != null) {
                                 Navigator.push(
+                                  // ignore: use_build_context_synchronously
                                   context,
                                   CupertinoPageRoute(
                                     builder: (context) => PostDetailPage(
-                                      timeline: shopTimelineWithImg![index],
+                                      timeline: shopTimelineWithImg[index],
                                       imageData: snapshot.data,
                                       shop: shop,
                                     ),
@@ -223,7 +223,7 @@ class AllPostPageState extends State<AllPostPage> {
                                         {
                                           setState(() {
                                             shopTimeline!.remove(
-                                                shopTimelineWithImg![index]);
+                                                shopTimelineWithImg[index]);
                                           })
                                         }
                                     });

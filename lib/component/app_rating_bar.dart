@@ -29,38 +29,23 @@ class AppRatingBar extends StatelessWidget {
         glowColor: Colors.white,
         onRatingUpdate: onRatingUpdate,
         ratingWidget: RatingWidget(
-          full: Container(
-            // width: 40,
-            // height: 40,
-            //margin: const EdgeInsets.all(0),
-            child: FittedBox(
-              fit: BoxFit.scaleDown, //こちらを追加
-              child: SvgPicture.asset(
-                "images/stars/all.svg",
-                height: 44,
-                width: 44,
-              ),
+          full: FittedBox(
+            fit: BoxFit.scaleDown, //こちらを追加
+            child: SvgPicture.asset(
+              "images/stars/all.svg",
+              height: 44,
+              width: 44,
             ),
           ),
-          half: Container(
-            // width: 40,
-            // height: 40,
-            //margin: const EdgeInsets.all(0),
-            child: SvgPicture.asset(
-              "images/stars/half.svg",
-              height: 40,
-              width: 40,
-            ),
+          half: SvgPicture.asset(
+            "images/stars/half.svg",
+            height: 40,
+            width: 40,
           ),
-          empty: Container(
-            // width: 40,
-            // height: 40,
-            //margin: const EdgeInsets.all(0),
-            child: SvgPicture.asset(
-              "images/stars/none.svg",
-              height: 40,
-              width: 40,
-            ),
+          empty: SvgPicture.asset(
+            "images/stars/none.svg",
+            height: 40,
+            width: 40,
           ),
           //
         ),

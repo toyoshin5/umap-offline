@@ -423,9 +423,7 @@ class SubButton extends StatelessWidget {
 }
 
 class _WantToGoBudge extends StatelessWidget {
-  const _WantToGoBudge({
-    super.key,
-  });
+  const _WantToGoBudge();
 
   @override
   Widget build(BuildContext context) {

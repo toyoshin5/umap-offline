@@ -531,7 +531,7 @@ class _RegisteredFilterButtonState extends State<RegisteredFilterButton> {
 //登録可否バッジ
 class _RegisterBudge extends StatelessWidget {
   final bool isRegistered;
-  const _RegisterBudge({super.key, required this.isRegistered});
+  const _RegisterBudge({required this.isRegistered});
 
   @override
   Widget build(BuildContext context) {

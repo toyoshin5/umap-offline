@@ -50,8 +50,7 @@ class Level {
   late int needExpNextLevel;
   int diff = 600;
 
-  Level(int exp) {
-    this.exp = exp;
+  Level(this.exp) {
     level = (exp / diff).floor() + 1;
     expOfCurLevel = exp % diff;
     needExpNextLevel = diff;

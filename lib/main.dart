@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gohan_map/bottom_navigation.dart';
 
 import 'package:gohan_map/tab_navigator.dart';
@@ -25,9 +24,9 @@ void main() async {
   ));
 
   // スプラッシュ画面をロードが終わるまで表示する
-  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: '.env');
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 ///アプリケーションの最上位のウィジェット
 ///ウィジェットとは、画面に表示される要素のこと。
@@ -35,10 +34,10 @@ class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
-  _MyAppState createState() => _MyAppState();
+  MyAppState createState() => MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class MyAppState extends State<MyApp> {
   bool? _isFirstLaunch;
 
   @override

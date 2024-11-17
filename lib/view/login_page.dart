@@ -1,10 +1,8 @@
-import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:gohan_map/colors/app_colors.dart';
 import 'package:gohan_map/main.dart';
-import 'package:sign_in_button/sign_in_button.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -72,7 +70,7 @@ class LoginPage extends StatelessWidget {
                 ),
                 child: Padding(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 30),
+                      const EdgeInsets.fromLTRB(16, 32, 16, 16),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -98,28 +96,31 @@ class LoginPage extends StatelessWidget {
                         "アプリはログインなしで利用できます。",
                       ),
                       const SizedBox(height: 16),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const MainPage(),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const MainPage(),
+                              ),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.primaryColor, // ボタンの背景色
+                            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
                             ),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primaryColor, // ボタンの背景色
-                          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
                           ),
-                        ),
-                        child: const Text(
-                          "アプリを始める",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.whiteColor,
+                          child: const Text(
+                            "アプリを始める",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.whiteColor,
+                            ),
                           ),
                         ),
                       ),

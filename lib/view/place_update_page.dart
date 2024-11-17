@@ -221,7 +221,7 @@ class _PlaceUpdatePageState extends State<PlaceUpdatePage>
       ..createdAt = widget.shop.createdAt
       ..updatedAt = DateTime.now();
     await IsarUtils.createShop(shop);
-    if (context.mounted) {
+    if (mounted) {
       //振動
       Haptic.onSuccess();
       //最初に戻る

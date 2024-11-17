@@ -8,7 +8,6 @@ import 'package:gohan_map/collections/shop.dart';
 import 'package:gohan_map/collections/timeline.dart';
 import 'package:gohan_map/component/app_exp_dialog.dart';
 import 'package:gohan_map/component/post_food_widget.dart';
-import 'package:gohan_map/utils/apis.dart';
 import 'package:gohan_map/utils/common.dart';
 import 'package:gohan_map/utils/isar_utils.dart';
 import 'package:gohan_map/view/place_detail_page.dart';
@@ -221,7 +220,6 @@ class _PlacePostPageState extends ConsumerState<PlacePostPage> {
       return;
     }
     //wantToGoフラグがTrueの場合はFalseに変更
-    int timelineId = widget.timeline?.id ?? -1;
     if (widget.shop.wantToGoFlg) {
       final shop = Shop()
         ..id = widget.shop.id
@@ -239,7 +237,7 @@ class _PlacePostPageState extends ConsumerState<PlacePostPage> {
     if (widget.timeline != null) {
       _updateTimeline();
     } else {
-      timelineId = await _addToDB();
+      _addToDB();
       //経験値獲得
       //もしそのお店の初投稿なら100exp獲得
       final int postCnt = await IsarUtils.getTimelinesByShopId(widget.shop.id)
@@ -276,7 +274,7 @@ class _PlacePostPageState extends ConsumerState<PlacePostPage> {
       ..date = date;
     await IsarUtils.createTimeline(timeline);
 
-    if (context.mounted) {
+    if (mounted) {
       //振動
       Haptic.onSuccess();
       Navigator.pop(context);
@@ -306,7 +304,7 @@ class _PlacePostPageState extends ConsumerState<PlacePostPage> {
       ..date = date;
     await IsarUtils.createTimeline(timeline);
 
-    if (context.mounted) {
+    if (mounted) {
       //振動
       Haptic.onSuccess();
       Navigator.pop(context);

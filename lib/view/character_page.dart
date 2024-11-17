@@ -65,7 +65,6 @@ class CharacterPageState extends State<CharacterPage> {
 
     int allNewShopSize = shops.where((el) => el.wantToGoFlg == false).length;
     int allTimelineSize = shopTimeline.length;
-    // TODO: 店単位の初投稿の日付が今月のものの個数を取得するように変更する
     int thisMonthNewShopSize = shops
         .where((el) =>
             el.wantToGoFlg == false &&
@@ -293,6 +292,7 @@ class CharacterPageState extends State<CharacterPage> {
                               final shop = await IsarUtils.getShopById(s);
                               if (mounted && shop != null) {
                                 Navigator.push(
+                                  // ignore: use_build_context_synchronously
                                   context,
                                   CupertinoPageRoute(
                                     builder: (context) => PostDetailPage(
