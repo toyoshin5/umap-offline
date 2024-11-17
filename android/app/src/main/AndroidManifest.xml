@@ -1,10 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.gohan_map">
+    package="com.toyoshin.umap">
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.VIBRATE" /> 
     <application
-        android:label="gohan_map"
+        android:label="うまっぷ"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

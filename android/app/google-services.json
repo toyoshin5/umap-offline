@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:1083179477798:android:65e9c6afba06c4db32afe7",
         "android_client_info": {
-          "package_name": "com.example.gohan_map"
+          "package_name": "com.toyoshin.umap"
         }
       },
       "oauth_client": [
@@ -34,7 +34,7 @@
               "client_id": "1083179477798-md5nf0iier4ug1nd93hr435e736214nb.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.gohanMap"
+                "bundle_id": "com.toyoshin.umap"
               }
             }
           ]
