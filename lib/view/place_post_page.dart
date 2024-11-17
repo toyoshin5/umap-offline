@@ -33,7 +33,6 @@ class _PlacePostPageState extends ConsumerState<PlacePostPage> {
   DateTime date = DateTime.now();
   String comment = '';
   double star = 4.0;
-  bool isPublic = true;
   bool avoidkeyBoard = false;
   bool isAPIRequesting = false;
 
@@ -54,7 +53,6 @@ class _PlacePostPageState extends ConsumerState<PlacePostPage> {
         date = widget.timeline!.date;
         comment = widget.timeline!.comment;
         star = widget.timeline!.star;
-        isPublic = widget.timeline!.isPublic;
         setState(() {});
       }
     });
@@ -125,13 +123,6 @@ class _PlacePostPageState extends ConsumerState<PlacePostPage> {
               onCommentFocusChanged: (isFocus) {
                 setState(() {
                   avoidkeyBoard = isFocus;
-                });
-              },
-              enablePublic: images.isNotEmpty,
-              initialPublic: isPublic,
-              onPublicChanged: (isPublic) {
-                setState(() {
-                  this.isPublic = isPublic;
                 });
               },
             ),
@@ -267,7 +258,7 @@ class _PlacePostPageState extends ConsumerState<PlacePostPage> {
       ..images = imagePathList
       ..comment = comment
       ..star = star
-      ..isPublic = isPublic
+      ..isPublic = false
       ..createdAt = DateTime.now()
       ..updatedAt = DateTime.now()
       ..shopId = widget.shop.id
@@ -297,7 +288,7 @@ class _PlacePostPageState extends ConsumerState<PlacePostPage> {
       ..images = imagePathList
       ..comment = comment
       ..star = star
-      ..isPublic = isPublic
+      ..isPublic = false
       ..createdAt = widget.timeline!.createdAt
       ..updatedAt = DateTime.now()
       ..shopId = widget.shop.id

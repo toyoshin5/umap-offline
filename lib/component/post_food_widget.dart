@@ -25,9 +25,6 @@ class PostFoodWidget extends StatelessWidget {
     this.initialComment,
     required this.onCommentChanged,
     this.onCommentFocusChanged,
-    this.enablePublic = false,
-    required this.onPublicChanged,
-    this.initialPublic,
   }) : super(key: key);
   final List<File> images;
   final Function(File) onImageAdded;
@@ -43,10 +40,6 @@ class PostFoodWidget extends StatelessWidget {
   final Function(String) onCommentChanged;
 
   final Function(bool)? onCommentFocusChanged;
-
-  final bool enablePublic;
-  final Function(bool) onPublicChanged;
-  final bool? initialPublic;
 
   @override
   Widget build(BuildContext context) {
@@ -77,14 +70,6 @@ class PostFoodWidget extends StatelessWidget {
           onChanged: onCommentChanged,
           onFocusChanged: onCommentFocusChanged,
         ),
-        if (enablePublic) ...[
-          const SizedBox(height: 16),
-          _PublicSection(
-            isPublic: initialPublic ?? false,
-            onChanged: onPublicChanged,
-          ),
-
-        ],
       ],
     );
   }
@@ -460,45 +445,6 @@ class _CommentSection extends StatelessWidget {
             onChanged: onChanged,
           ),
         ),
-      ],
-    );
-  }
-}
-
-class _PublicSection extends StatelessWidget {
-  const _PublicSection({
-    this.isPublic = false,
-    required this.onChanged,
-  });
-  final bool isPublic;
-  final Function(bool) onChanged;
-  @override
-  Widget build(BuildContext context) {
-    final String msg = (isPublic)
-        ? "投稿した画像がおすすめ機能として他ユーザーに公開されることがあります\n※訪問日やコメントは公開されません"
-        : "投稿した画像がおすすめ機能として他ユーザーに公開されることはありません";
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Padding(
-          padding: EdgeInsets.only(bottom: 8),
-          child: _SectionTitle(icon: Icons.lock_open_rounded, title: "公開設定"),
-        ),
-        Row(
-          children: [
-            const Text('画像の公開を許可'),
-            const Spacer(),
-            CupertinoSwitch(
-              value: isPublic,
-              onChanged: onChanged,
-              activeColor: AppColors.primaryColor,
-            ),
-          ],
-        ),
-        Text(
-          msg,
-          style: const TextStyle(color: AppColors.greyDarkColor, fontSize: 10),
-        )
       ],
     );
   }
